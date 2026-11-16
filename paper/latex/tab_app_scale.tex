@@ -1,0 +1,17 @@
+\begin{tabular}{l r cc ccc c}
+\toprule
+ & & \multicolumn{2}{c}{Baseline} & \multicolumn{3}{c}{Top-1 (\%)} & \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-7}
+Encoder & Params & $\rho$ Syn. & MAE & Base & Augm. & \ours & $\rho_{\text{H2}}$ (all) \\
+\midrule
+Recurrent 64 & 46k & 0.85 & 0.0189 & 41.0 & 44.5 & \hl \textbf{63.4} & 5.9 to 7.3 \\
+Recurrent 128 & 182k & 0.85 & 0.0185 & 39.4 & 44.9 & \hl \textbf{65.8} & 6.1 to 7.1 \\
+Recurrent 256 & 725k & 0.89 & 0.0194 & 39.6 & 45.5 & \hl \textbf{63.7} & 5.8 to 7.3 \\
+Recurrent 256, 4 rounds & 725k & 0.89 & 0.0185 & 38.3 & 44.8 & \hl \textbf{67.4} & 5.3 to 7.4 \\
+Recurrent 1024 & 11.6M & 0.86 & 0.0192 & 38.4 & 41.7 & \hl \textbf{64.7} & 6.4 to 7.1 \\
+\midrule
+Transformer 128 & 480k & 0.76 & 0.0197 & 17.5 & 18.8 & \hl \textbf{49.0} & 6.5 to 7.0 \\
+Transformer 256 & 1.8M & 0.69 & 0.0217 & 19.3 & 19.3 & \hl \textbf{48.2} & 5.6 to 6.9 \\
+Transformer 512 & 7.2M & 0.74 & 0.0236 & 18.9 & 18.8 & \hl \textbf{47.5} & 5.2 to 6.5 \\
+\bottomrule
+\end{tabular}

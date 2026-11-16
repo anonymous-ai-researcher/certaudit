@@ -1,0 +1,27 @@
+\begin{table}[h]
+\centering
+\caption{Design-level comparisons (7 EPFL test designs; each design averaged over its circuits and 5 seeds). Diff.: B minus A; CI: 95\% cluster bootstrap over designs; $n_+$: designs where B $>$ A; $p$: two-sided sign test.}
+\label{tab:app_stats}
+\footnotesize
+\begin{tabular}{llrcrr}
+\toprule
+B vs.\ A & Metric & Diff. & 95\% CI & $n_+$ & $p$ \\
+\midrule
+\ours\ vs.\ Baseline & Top-1 (pts) & 21.3 & [16.7, 25.7] & 7/7 & 0.016 \\
+\ours\ vs.\ Baseline & $\bar\delta_{\mathrm{R}}$ & \ensuremath{-}0.0052 & [\ensuremath{-}0.0095, \ensuremath{-}0.0018] & 1/7 & 0.125 \\
+\ours\ vs.\ Baseline & MAE & 0.0029 & [\ensuremath{-}0.0005, 0.0058] & 5/7 & 0.453 \\
+\ours\ vs.\ Augmentation & Top-1 (pts) & 17.9 & [13.9, 21.6] & 7/7 & 0.016 \\
+\ours\ vs.\ Augmentation & $\bar\delta_{\mathrm{R}}$ & 0.0000 & [\ensuremath{-}0.0031, 0.0029] & 4/7 & 1.000 \\
+\ours\ vs.\ Augmentation & MAE & 0.0033 & [0.0012, 0.0058] & 7/7 & 0.016 \\
+\ours\ vs.\ TT-sim & Top-1 (pts) & 19.8 & [14.9, 24.2] & 7/7 & 0.016 \\
+\ours\ vs.\ TT-sim & $\bar\delta_{\mathrm{R}}$ & 0.0005 & [\ensuremath{-}0.0031, 0.0034] & 5/7 & 0.453 \\
+\ours\ vs.\ TT-sim & MAE & 0.0041 & [0.0020, 0.0063] & 6/7 & 0.125 \\
+\ours\ vs.\ Circuit contrast & Top-1 (pts) & 21.7 & [17.0, 25.8] & 7/7 & 0.016 \\
+\ours\ vs.\ Circuit contrast & $\bar\delta_{\mathrm{R}}$ & \ensuremath{-}0.0055 & [\ensuremath{-}0.0082, \ensuremath{-}0.0031] & 0/7 & 0.016 \\
+\ours\ vs.\ Circuit contrast & MAE & 0.0016 & [\ensuremath{-}0.0004, 0.0043] & 5/7 & 0.453 \\
+Augmentation vs.\ Baseline & Top-1 (pts) & 3.4 & [2.3, 4.5] & 7/7 & 0.016 \\
+Augmentation vs.\ Baseline & $\bar\delta_{\mathrm{R}}$ & \ensuremath{-}0.0053 & [\ensuremath{-}0.0075, \ensuremath{-}0.0033] & 0/7 & 0.016 \\
+Augmentation vs.\ Baseline & MAE & \ensuremath{-}0.0004 & [\ensuremath{-}0.0028, 0.0017] & 3/7 & 1.000 \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,29 @@
+\begin{table}[h]
+\centering
+\caption{Baselines, models and benchmarks: included, excluded, and why.}
+\label{tab:app_choices}
+\small
+\begin{tabular}{p{3.4cm}p{2.8cm}p{10.4cm}}
+\toprule
+Item & Status & Reason \\
+\midrule
+Baseline (no repair) & included & Reference for every effect; the audited object. \\
+Augmentation & included & Simplest repair; isolates the effect of \emph{seeing} certified rewrites with correct labels. \\
+TT-sim (DeepGate2-style) & included & Closest published functional objective~\cite{DBLP:conf/iccad/ShiPKLLHZYCX23}; tests whether pairwise functional similarity suffices. Reported both with random pairs and with DeepGate2's own pair filters, which do not raise retrieval (Q13). \\
+Circuit contrast (FGNN-style) & included & Closest published contrastive objective~\cite{DBLP:conf/dac/WangBHZXHYH22}; same certified variants as \ours\ but without gate correspondence, so it isolates the value of gate correspondence. \\
+Bidirectional encoder, transformer & included & Test whether the findings depend on our fanin-only encoder; the first adds DeepGate's attention and reverse pass. \\
+$L_1$ alignment (MixGate-style) & included & Closest published use of SAT-proven gate pairs~\cite{DBLP:journals/corr/abs-2509-20968}; positives only, so it isolates the role of negatives. \\
+Simulation signatures & included as reference & Exact-in-the-limit, non-learned retrieval; shows that retrieval probes the representation rather than proposing a new matcher. \\
+DeepGate2/3 checkpoints & included & The published models whose premise we test; audited unchanged with the released harness (\cref{tab:general}). DeepGate2 is also retrained from its released code and data (3 seeds), so the finding does not rest on one checkpoint. \\
+FGNN2, MGVGA, TRACE checkpoints & included (embeddings) & Released weights audited on their gate states (\cref{app:ext}); none releases a probability head for AIGs, so prediction-level metrics do not apply. \\
+PolarGate, HOGA, NetTAG & not included & Different inputs or tasks (ambipolar message passing with differentiable AND/NOT operators, hop-wise attention for QoR and functional reasoning, text-attributed graphs aligned with RTL and layout); the harness applies to any model with per-gate outputs. \\
+Gamora & not included & Targets symbolic reasoning on large multiplier-like networks with node classification, not per-gate probability or embeddings comparable to ours. \\
+EPFL suite & included & Standard logic-synthesis benchmark with arithmetic and control designs; split by design. \\
+ISCAS85/89 & included (test only) & Classic gate-level suites with a different design style; tests transfer without retraining. \\
+ITC99 & not included & Publicly available sources are RTL (VHDL); our environment has no VHDL front end, and synthesizing them would add a tool dependency not shared by the other suites. \\
+OpenABC-D, large IWLS designs & not included & Certifying rewrites of large cones is the bottleneck (\LgTimeout\ of \LgBuilt\ cones of at most 6{,}000 gates exceed a \LgTimeoutMin-minute SAT limit), and smaller cones cut from them would be the same kind of logic as EPFL. \\
+Commercial synthesis flows & not included & Not reproducible or redistributable; mockturtle passes implement the same classes of transformations (rewriting, resubstitution, balancing, refactoring). \\
+ABC scripts & included (test only) & resyn2, dc2, compress2rs and a 6-input LUT round trip rewrite every EPFL and ISCAS test circuit (\AbcVariants\ variants, each certified by two checkers; \cref{app:abc}); never used in training, so they test transfer to another tool. \\
+\bottomrule
+\end{tabular}
+\end{table}

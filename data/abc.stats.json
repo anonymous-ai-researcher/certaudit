@@ -1,0 +1,59 @@
+{
+ "file": "abc.pkl",
+ "abc": "UC Berkeley, ABC 1.01 (compiled Nov 10 2026 10:48:19) @ f34d3b2899c0ca631b3629f174a720fd776d667b",
+ "cones": 1054,
+ "seconds": 201,
+ "epfl/A1_resyn2": {
+  "variants": 376,
+  "proven_pairs": 16146,
+  "gates_ratio": 0.859,
+  "frac_matched": 0.656
+ },
+ "epfl/A2_dc2": {
+  "variants": 376,
+  "proven_pairs": 12774,
+  "gates_ratio": 0.825,
+  "frac_matched": 0.511
+ },
+ "epfl/A3_compress2rs": {
+  "variants": 376,
+  "proven_pairs": 15025,
+  "gates_ratio": 0.835,
+  "frac_matched": 0.616
+ },
+ "epfl/A4_lutmap": {
+  "variants": 376,
+  "proven_pairs": 15048,
+  "gates_ratio": 0.931,
+  "frac_matched": 0.561
+ },
+ "iscas/A1_resyn2": {
+  "variants": 678,
+  "proven_pairs": 21936,
+  "gates_ratio": 0.792,
+  "frac_matched": 0.508
+ },
+ "iscas/A2_dc2": {
+  "variants": 678,
+  "proven_pairs": 19929,
+  "gates_ratio": 0.764,
+  "frac_matched": 0.436
+ },
+ "iscas/A3_compress2rs": {
+  "variants": 678,
+  "proven_pairs": 20171,
+  "gates_ratio": 0.772,
+  "frac_matched": 0.475
+ },
+ "iscas/A4_lutmap": {
+  "variants": 678,
+  "proven_pairs": 22960,
+  "gates_ratio": 1.009,
+  "frac_matched": 0.427
+ },
+ "cert_fail": 0,
+ "cec_fail": 0,
+ "abc_error": 0,
+ "identical": 0,
+ "cones_failed": 0
+}

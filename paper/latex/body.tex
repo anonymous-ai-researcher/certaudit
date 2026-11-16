@@ -1,0 +1,341 @@
+% ===========================================================================
+\section{Introduction}
+% ===========================================================================
+Circuit representation models encode an And-Inverter Graph (AIG) into per-gate embeddings trained to
+reflect what each gate computes and reused for testability analysis, logic synthesis, Boolean
+satisfiability (SAT) solving and other tasks~\cite{DBLP:conf/dac/0019KSWY022,DBLP:conf/iccad/ShiPKLLHZYCX23,DBLP:conf/iccad/ShiZKZ0024,DBLP:conf/iclr/ZhengHZSDX025,DBLP:conf/dac/WangBHZXHYH22,DBLP:conf/iccad/0006ZZLY024,DBLP:conf/dac/DengYYSCJZ24,DBLP:conf/dac/FangLLLZX25,DBLP:journals/trets/ZhaoGZWLJ26,DBLP:conf/iccad/ShiMZZPJYYCX25,DBLP:journals/corr/abs-2504-03711}.
+Such reuse rests on one premise: an embedding describes the \emph{function} of a gate, not the structure
+that implements it.
+
+\begin{figure*}[t]
+\centering
+\mainonly{\scalebox{0.872}{\input{fig_overview}}}\extonly{\input{fig_overview}}
+\caption{\textbf{Overview.} Across a certified rewrite, a function-aware model should give two gates proven equivalent
+by SAT the same prediction \emph{and} the same neighborhood. All panels follow the small test pair with the largest baseline-to-\ours\ gap in the earlier CPU run
+(\cref{sec:setup}; seed-0 models; aggregates: \cref{tab:main})\extonly{; in (c), 63 of the 122 gates of $G$ lie
+nearer to $u$ than its proven equivalent under the baseline, none under \ours}. Dashed edges and rings: complemented (inverted).}
+\label{fig:overview}
+\end{figure*}
+
+The premise is testable, because logic synthesis constantly changes structure while preserving function
+\cite{DBLP:conf/dac/MishchenkoCB06,DBLP:conf/cav/BraytonM10}. A model that has learned function should treat two gates computing the same Boolean function
+alike, in prediction and in embedding, however the surrounding logic was rewritten; one that does not is
+\emph{equivalence blind}. Blindness matters most where these models guide SAT sweeping~\cite{DBLP:conf/iccad/ShiPKLLHZYCX23} and
+equivalence checking~\cite{DBLP:journals/corr/abs-2508-04235}, which must tell equivalent from inequivalent logic.
+
+A rigorous test needs rewrites \emph{proven} to preserve function, a gate-level correspondence between a circuit
+and its rewrite, and metrics that separate structure-induced from ordinary prediction error. Current evaluations
+score equivalence within one circuit or between circuits~\cite{DBLP:conf/iccad/ShiPKLLHZYCX23,DBLP:conf/dac/ZhengZZX26,DBLP:conf/iclr/WuZ0025,DBLP:conf/nips/ZhengLSX25}; CircuitGate~\cite{DBLP:journals/corr/abs-2610-09549}
+matches gates across four ABC rewrites of 20 circuits by simulation and equivalence checking and reports
+embedding similarity and task error. None separates the two kinds of error, stresses models with redundant or adversarial rewrites, or tests whether a repair covers
+rewrites absent from training. Random simulation, the usual source of
+functional labels~\cite{DBLP:conf/dac/0019KSWY022,DBLP:conf/iccad/ShiPKLLHZYCX23}, cannot certify that correspondence: \SigFalsePct\% of our
+gates whose 4{,}096-pattern signatures match an original gate have no true equivalent. SAT-proven gate equivalences
+have been used for training across graph formats of one circuit~\cite{DBLP:journals/corr/abs-2509-20968}; we use them to measure.
+
+\audit\ (\cref{fig:overview}) finds every audited model blind: training on certified rewrites steadies the
+\emph{predictions}, mostly against redundancy; only aligning proven pairs partly repairs the \emph{representation}; neither survives
+an unseen XOR-based rewrite.
+
+\noindent\textbf{Contributions.}
+\begin{itemize}
+\item \textbf{\audit} (\cref{sec:audit}): certified synthesis, injection, held-out and adversarial rewrites with
+SAT-proven gate matching (\NTotalVar\ variants of \NTestCones\ EPFL test circuits, \NTestPairsK\ proven pairs), and
+metrics separating prediction from representation failure.
+\item \textbf{An audit} (\cref{sec:rq1,sec:generality}): under re-synthesis, predictions for proven-equivalent
+gates differ by $\ScBaseRhoMin\times$ to $\ScBaseRhoMax\times$ the model's own error for recurrent encoders up to
+\ScMaxParams\ parameters, enough to change SAT phase
+hints; embeddings find the proven equivalent only \BaseTopRS\% of the time; the unseen
+rewrite at least halves the equivalent-gate retrieval of five released encoders (DeepGate2: \DTwoTopSeen\% to
+\DTwoHTwoRS\%), two of them trained for equivalence~\cite{DBLP:journals/tcad/WangBHZXHHY25,DBLP:conf/dac/ZhengZZX26}. A design never used in development confirms
+the main findings.
+\item \textbf{\ours\ and a two-level analysis of repair} (\cref{sec:models,sec:rq2}): training on certified rewrites
+steadies predictions but barely moves the representation; \ours, a contrastive loss that pairs individual gates proven equivalent by SAT rather than whole circuits or
+cones~\cite{DBLP:conf/dac/WangBHZXHYH22,DBLP:conf/aspdac/FangLZX25,DBLP:conf/nips/ZhengLSX25}, raises
+retrieval from \BaseTopRS\% to \OursTopRS\%, beyond augmentation (even with 4$\times$ the certified data), a
+DeepGate2-style loss and circuit-level contrast (each on all 7 test designs) and MixGate-style $L_1$
+alignment (\LoneTop\%); fine-tuning the released DeepGate2 with
+it gives \FtEqTopSeen\% (\FtCtrlTopSeen\% with DeepGate2's loss).
+\item \textbf{A probe on SAT sweeping} (\cref{sec:rq3}): aligned embeddings save more SAT calls on false
+candidates than baseline ones, but on small designs inference outweighs the savings.
+\end{itemize}
+Source code, audit set, models and an extended report with all ablations are at {\color{linkblue}\url{https://anonymous.4open.science/r/certaudit}}.
+
+% ===========================================================================
+\section{Related Work}\label{sec:related}
+% ===========================================================================
+\noindent\textbf{Circuit encoders and their supervision.} DeepGate~\cite{DBLP:conf/dac/0019KSWY022} propagates gate states over an
+AIG in topological order with attention, gated recurrent unit (GRU)~\cite{DBLP:conf/emnlp/ChoMGBBSB14} updates and a reverse pass, supervised by signal
+probabilities; DeepGate2~\cite{DBLP:conf/iccad/ShiPKLLHZYCX23} adds pairwise truth-table distances, DeepGate3 and DeepGate4~\cite{DBLP:conf/iccad/ShiZKZ0024,DBLP:conf/iclr/ZhengHZSDX025}
+refine its embeddings with transformers to scale, PolarGate~\cite{DBLP:conf/iccad/0006ZZLY024} builds idempotent and involutive logic
+operators, FuncGNN~\cite{DBLP:journals/trets/ZhaoGZWLJ26} conditions graph normalization on the AND-to-NOT ratio, MGVGA~\cite{DBLP:conf/iclr/WuZ0025} reconstructs masked gates under Verilog constraints, and CircuitGate~\cite{DBLP:journals/corr/abs-2610-09549} adds
+primary-input support features and probability constraints. Gamora~\cite{DBLP:conf/dac/WuLHDYX23} and
+HOGA~\cite{DBLP:conf/dac/DengYYSCJZ24} learn task labels such as XOR and majority roles. A second line trains on equivalence itself:
+FGNN, FGNN2 and TRACE~\cite{DBLP:conf/dac/WangBHZXHYH22,DBLP:journals/tcad/WangBHZXHHY25,DBLP:conf/dac/ZhengZZX26} contrast circuits with their equivalent rewrites;
+CircuitEncoder, CircuitFusion and NetTAG~\cite{DBLP:conf/aspdac/FangLZX25,DBLP:conf/iclr/FangLWX25,DBLP:conf/dac/FangLLLZX25} align equivalent register
+cones across RTL, netlist and layout; DeepCell~\cite{DBLP:conf/iccad/ShiMZZPJYYCX25} reconstructs masked cells of a mapped netlist with
+its AIG; and functional subgraph matching~\cite{DBLP:conf/nips/ZhengLSX25} aligns a circuit with its synthesized and mapped
+versions to find logic hidden by restructuring. All align circuits, cones or views and are scored on downstream
+tasks, not on whether a gate and its proven equivalent are encoded alike, which \audit\ measures and \ours\
+trains. The architecture alone guarantees
+little: neighborhood aggregation separates graphs at most as well as the Weisfeiler-Lehman test~\cite{DBLP:conf/iclr/XuHLJ19}, so
+embeddings follow structure, and only training can tie two structures of one function together. We measure how
+far it does.
+
+\noindent\textbf{Testing invariance.} Metamorphic testing~\cite{DBLP:journals/corr/abs-2002-12543,DBLP:journals/tse/SeguraFSC16} checks a
+relation between the outputs of related inputs where no oracle gives the correct output, and CheckList~\cite{DBLP:conf/acl/RibeiroWGS20}
+applies it to language models with perturbations whose label preservation rests on their design; \audit\ uses a
+relation that SAT certifies on every pair. Perturbation studies of circuit models target downstream tasks.
+CirSTAG~\cite{DBLP:conf/dac/ChengYDAZF25} scores the stability of graph neural networks (GNNs) under feature and topology changes that need not preserve function, and
+graph attacks~\cite{DBLP:conf/kdd/ZugnerAG18} perturb features and edges freely. AttackGNN~\cite{attackgnn} instead searches
+function-preserving ABC passes that fool hardware-security GNNs, and Zhao and Shamsi~\cite{DBLP:conf/glvlsi/ZhaoS22,rewrite_adv}
+show that such rewrites lower GNN operator detection, which training on rewritten circuits partly restores. For
+code, adversarial training resists longer sequences of the transforms it saw~\cite{DBLP:conf/wcre/HenkelRWAJR22}, and contrastive
+pre-training on compiler-transformed variants resists semantics-preserving edits~\cite{DBLP:conf/emnlp/0001JZA0S21}. Augmentation
+averages the loss over the transforms it samples~\cite{DBLP:conf/nips/ChenDL20} and constrains nothing beyond them; our
+held-out families, never used in training, test exactly this.
+
+\noindent\textbf{Learning in equivalence checking.} SAT sweeping (fraiging) merges functionally equivalent AIG
+nodes, such as the two halves of a miter: random simulation proposes candidate classes, SAT confirms or refutes their
+members, and counterexamples are resimulated to split the classes~\cite{DBLP:journals/tcad/KuehlmannPKG02,fraig,DBLP:conf/iccad/MishchenkoCBE06}.\extonly{
+Resimulation removes many false candidates at once, but each one that survives it and is refuted still costs a SAT
+call, so candidate ordering is a natural probe for learned embeddings.} DeepGate2~\cite{DBLP:conf/iccad/ShiPKLLHZYCX23} orders candidate
+classes by embedding similarity inside ABC's \texttt{\&fraig}, reporting fewer satisfiable calls on industrial
+designs. CASCAD~\cite{DBLP:journals/corr/abs-2508-04235} guides a SAT solver's phase selection and clause filtering with GNN-predicted
+conditional probabilities.
+
+% ===========================================================================
+\section{\audit: A Certified Metamorphic Audit}\label{sec:audit}
+% ===========================================================================
+
+\Cref{fig:overview} outlines the audit. An AIG $G$ has primary inputs (PIs), two-input AND gates and
+possibly complemented edges.  Gate $v$ computes
+a Boolean function $f_v$ of the PIs, and its signal probability is $p_v=\Pr[f_v=1]$ under uniform
+inputs. A model predicts $\hat p_v$ and an embedding $\mathbf z_v$. A
+\emph{variant} $G'$ of $G$ has the same PIs and output functions; primes mark $G'$.
+
+\subsection{Rewrite Families}\label{sec:families}
+\textbf{Synthesis} S1 to S4 chain passes from the EPFL logic synthesis libraries~\cite{DBLP:journals/corr/abs-1805-05121,aigverse}:
+cut rewriting (rw), resubstitution (rs), balancing (b) and sum-of-products (SOP) refactoring (rf). S1 runs rw, rs, b, rf; S2 runs b,
+rw$^0$, rf$^0$, rs$^+$; S3 runs rf, rw, rw$^0$; S4 runs rs$^+$, b, rw, rs, where $^0$ also accepts size-neutral
+(zero-gain) moves and rs$^+$ allows windows of 10 instead of 8 leaves and 3 instead of 2 inserted gates. \textbf{Injection} I.1, I.3 and I.5 rebuild each gate
+$x\wedge y$ with probability $r=0.1$, $0.3$ and $0.5$ as an equivalent sub-circuit chosen at random among
+$(x\wedge y)\wedge(x\vee y)$, the Shannon expansion $((x\wedge y)\wedge s)\vee((x\wedge y)\wedge\neg s)$ on a random
+earlier signal $s$, and $(x\wedge y)\wedge\neg((x\wedge y)\wedge\neg x)$, whose inner gate is constant 0.
+\textbf{Held-out} families are never used for training: H1 composes don't-care-based resubstitution, rewriting
+and refactoring with exclusive-sum-of-products balancing, and H2, an XOR-based rewrite, rebuilds each gate with
+probability $r=0.3$ by the identity $x\wedge y=(x\oplus y)\oplus(x\vee y)$, each XOR as three AND gates. \textbf{Adversarial}
+variants are 16 compositions of synthesis and injection per circuit, each at most 30\% larger; sampled, not
+optimized, they lower-bound the worst case. \textbf{ABC} variants, for testing only, rewrite every test circuit by four ABC~\cite{DBLP:conf/cav/BraytonM10}
+scripts: resyn2, dc2, compress2rs and a 6-input LUT mapping round trip\extonly{ (\texttt{if -K 6; mfs2; strash}, \cref{app:abc})}; each also passes ABC's \texttt{cec}.
+
+\subsection{Certification and SAT-Proven Matching}\label{sec:matching}
+Every variant is certified against its original at all outputs by mockturtle's SAT-based equivalence
+checker, run without a conflict limit. For each gate $u$ of $G'$ we seek
+a gate $v$ of $G$ with $f'_u=f_v\oplus\pi$ for a polarity $\pi\in\{0,1\}$. Candidates are the gates whose
+4{,}096-pattern signatures (shared random inputs) agree up to complement. Each candidate, in topological order, is
+decided by an unlimited incremental SAT call (CaDiCaL~1.5.3~\cite{cadical2020} via PySAT~\cite{DBLP:conf/sat/IgnatievMM18}) on a
+shared-input Tseitin encoding~\cite{tseitin}, and the first proven candidate forms the \emph{proven pair}
+$(v,u,\pi)$. All EPFL pairs take about $10^6$ SAT calls, 43\,s on 2 CPU cores\extonly{
+(\cref{tab:app_pipeline})}.\extonly{ On the EPFL test set, SAT refutes every candidate of \SigFalsePct\% of the \SigCandTest\ variant gates
+with one}\extonly{ (\SigFalseSynPct\% for synthesis, \SigFalseInjPct\% for injection); among these false matches,
+\SigNearConstSynPct\% and \SigNearConstInjPct\%, respectively, have $p<0.01$ or $p>0.99$, that is, they are
+near-constant.}
+
+\subsection{Metrics: Separating Structure-Induced From Ordinary Error}\label{sec:metrics}
+Because $p'_u=|\pi-p_v|$ holds exactly for a proven pair, any disagreement between the two predictions comes from
+structure alone. We define the \emph{inconsistency} $\delta(v,u)=\big|\hat p_v-|\pi-\hat p'_u|\big|$ and call a
+pair \emph{restructured} if the structural hashes of the two fanin cones differ (PIs keyed by index, AND
+commutative). For an encoder that, like ours, reads only the fanin cone, unrestructured pairs have $\delta=0$ by
+construction, so $\rho$, $g$ and Top-1 use restructured pairs; $\Delta$MAE and AUROC$_\mathrm{lvl}$ use all proven
+pairs. Each quantity is averaged per circuit, then over a family's circuits; ratios ($\rho$, worst case)
+divide such averages.
+
+\noindent(i) \textbf{Matched-gate degradation} $\Delta\mathrm{MAE}$: the mean absolute error (MAE) of
+$\hat p'_u$ minus that of $\hat p_v$ over proven pairs. Gates that exist only in the variant are ignored.
+
+\noindent(ii) \textbf{Consistency ratio} $\rho=\bar\delta_{\mathrm{R}}/\bar\epsilon_{\mathrm{R}}$: the mean
+inconsistency over restructured (R) pairs divided by the mean error $\epsilon_v=|\hat p_v-p_v|$ on the same
+original gates, so $\rho=1$ means the model moves by as much as it errs and $\rho=0$ means perfect
+consistency. The \emph{gap closed} $g=1-\bar\delta_{\mathrm{R}}/\bar\delta_\perp$ uses $\bar\delta_\perp$, the
+inconsistency after permuting the signed variant-side errors within each variant, as if each variant gate's error were redrawn
+from the other pairs\extonly{ (consistency ratio $\rho_\perp$)}: an
+equally accurate model with independent errors has $g=0$, a perfectly consistent one $g=1$. The error cancels in
+$g$, so unlike $\rho$ it cannot improve by becoming less accurate. We also compare
+$\bar\delta_{\mathrm{R}}$ with a \emph{noise floor}, the mean disagreement between seeds of the same model on the
+same original gates.
+
+\noindent(iii) \textbf{Top-1 retrieval}: for each restructured pair with $\pi=0$ (for $\pi=1$, $u$ computes
+$\neg f_v$, and no loss aligns such pairs), a hit if $v$ is the \emph{unique}
+original gate with the highest cosine similarity to $\mathbf z'_u$. Ties, and other gates of the same
+function (\DupTwinPct\% of gates have a signature twin), count as misses; chance is one over the gate count of $G$.
+AUROC$_\mathrm{lvl}$ ($\pi=0$) separates the cosine similarity of $\mathbf z'_u$ to $\mathbf z_v$ from that
+to a random original gate at $v$'s \emph{level} (longest path from a PI).
+
+\noindent(iv) \textbf{Worst case}: the matched-gate MAE of the adversarial variant with the largest
+$\Delta\mathrm{MAE}$, and its ratio to the original.
+
+% ===========================================================================
+\section{Encoder and Repair Regimes}\label{sec:models}
+% ===========================================================================
+\noindent\textbf{Encoder.} We audit a compact DeepGate-inspired encoder, small enough to train many times.
+Gate states are updated level by level in topological order. An AND gate with fanin states $\mathbf h_a,\mathbf h_b$
+and complement bits $c_a,c_b$ computes $\mathbf m_a=\phi([\mathbf h_a,c_a])$, $\mathbf m_b=\phi([\mathbf h_b,c_b])$ and
+$\mathbf m=\mathbf m_a+\mathbf m_b+\psi(\mathbf m_a\odot\mathbf m_b)$, with two-layer MLPs $\phi,\psi$\extonly{ ($[\cdot,\cdot]$: concatenation; $\odot$: elementwise product)}, and updates its
+state with a GRU~\cite{DBLP:conf/emnlp/ChoMGBBSB14}. After two such passes over the circuit, a sigmoid head predicts $\hat p_v$ under an
+$L_1$ loss. All PIs share one learned state. The encoder has one 64-dimensional state (its width) and, unlike DeepGate, no attention
+or reverse pass; a bidirectional variant with both is in \cref{sec:generality}.
+
+\noindent\textbf{Comparison regimes.} \emph{Baseline} trains on original circuits; \emph{augmentation} adds
+one certified variant per circuit, with the same loss. Two further regimes add a representation loss
+to augmentation on a projection head $q$ (a two-layer MLP), $\mathbf z=q(\mathbf h)$. \emph{\mbox{TT-sim}} (truth-table similarity) simplifies
+DeepGate2's functionality loss~\cite{DBLP:conf/iccad/ShiPKLLHZYCX23}: for 64 random gate pairs per circuit, the cosine similarity of their
+projections is regressed ($L_1$) onto their truth-table similarity, one minus the normalized Hamming distance of
+1{,}024-pattern signatures, with weight $\lambda_{\mathrm{TT}}$; DeepGate2's pair filters do not raise its retrieval
+(extended version, FAQ Q13). \emph{Circuit-level contrast} (circuit contrast in tables and figures) adapts the netlist
+contrast of FGNN~\cite{DBLP:conf/dac/WangBHZXHYH22}: the mean projections of a circuit's gates and of its variant's form a positive
+pair in an InfoNCE loss of weight $\lambda_{\mathrm C}$ ($\tau=0.1$, other circuits in the batch as negatives),
+with no gate-level term.
+
+\noindent\textbf{\ours.} Random gate pairs are almost never equivalent, and a circuit-level positive~\cite{DBLP:conf/dac/WangBHZXHYH22,DBLP:conf/nips/ZhengLSX25}
+does not say which gates correspond, so neither loss asks the encoder to map two \emph{different structures}
+of one function to the same point. \ours\ asks exactly that. The loss is standard, an InfoNCE loss~\cite{DBLP:journals/corr/abs-1807-03748} applied in both
+directions~\cite{DBLP:conf/icml/ChenK0H20}. MixGate~\cite{DBLP:journals/corr/abs-2509-20968} aligns proven pairs across graph formats with an $L_1$ loss and reports no gain in its prediction losses from an InfoNCE variant, at 1.5$\times$ the cost; we apply that form within one encoder and one format and evaluate retrieval. MixGate's positives-only $L_1$ alignment of proven pairs on $\mathbf h$, alone or with the TT-sim
+term, gives two further regimes (\cref{sec:rq2}). \ours\ acts on proven pairs with $\pi=0$ (\ComplPct\% of pairs have $\pi=1$ and are left out), sampling up to 512 pairs per batch:
+\begin{equation}
+\mathcal L=\mathcal L_{L_1}(G\cup G')+\tfrac{\lambda}{2}\big[\mathrm{CE}(\mathbf Z\mathbf Z'^{\top}/\tau)+\mathrm{CE}(\mathbf Z'\mathbf Z^{\top}/\tau)\big],
+\end{equation}
+where $\mathcal L_{L_1}$ is the prediction loss, $\lambda$ the alignment weight, $\tau=0.1$ the temperature, row $i$ of $\mathbf Z$ and $\mathbf Z'$ holds the normalized projections of pair $i$, and CE is the
+cross-entropy with the diagonal as target. As in SimCLR~\cite{DBLP:conf/icml/ChenK0H20}, the loss acts on a projection\extonly{, so the invariances it imposes need not be
+absorbed by the states that feed the probability head}; the embedding $\mathbf z$ is the projection
+where one exists and $\mathbf h$ otherwise, the space each regime's loss shapes.
+
+\begin{table*}[t]
+\centering
+\caption{\textbf{Main results} on the \NTestCones\ EPFL test circuits (7 designs; mean $\pm$ s.d.\ over 5 seeds\extonly{;
+metrics: \cref{sec:metrics}}). Syn.: S1 to S4; Inj.: I.1, I.3, I.5; Held-out: mean of H1 and H2\extonly{, never used in
+training}; seen: Syn.\ and Inj. Worst: of 16 adversarial variants. Top-1 on restructured pairs (chance \Chance\%).}
+\label{tab:main}
+\footnotesize
+\setlength{\tabcolsep}{2.0pt}
+\renewcommand{\arraystretch}{1.0}
+\begin{tabular}{l c ccc ccc c cc c}
+\toprule
+ & MAE $\downarrow$ & \multicolumn{3}{c}{$\Delta$MAE on matched gates $\downarrow$} & \multicolumn{3}{c}{Consistency ratio $\rho\downarrow$} & Worst $\downarrow$ & \multicolumn{2}{c}{Top-1 (\%) $\uparrow$} & AUROC$_\mathrm{lvl}\uparrow$ \\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}\cmidrule(lr){10-11}
+Model & original & Syn. & Inj. & Held-out & Syn. & Inj. & Held-out & MAE & seen & held-out & \\
+\midrule
+\mk{cbase}\ Baseline & \BaseMAE\sd{\BaseMAESd} & \BaseDSyn\sd{\BaseDSynSd} & \BaseDInj\sd{\BaseDInjSd} & \BaseDHo\sd{\BaseDHoSd} & \BaseRhoSyn\sd{\BaseRhoSynSd} & \BaseRhoInj\sd{\BaseRhoInjSd} & \BaseRhoHo\sd{\BaseRhoHoSd} & \BaseWorst\sd{\BaseWorstSd} & \BaseTopRS\sd{\BaseTopRSSd} & \BaseTopHo\sd{\BaseTopHoSd} & \BaseAUCHard\sd{\BaseAUCHardSd} \\
+\mk{caug}\ Augmentation & \AugMAE\sd{\AugMAESd} & \AugDSyn\sd{\AugDSynSd} & \AugDInj\sd{\AugDInjSd} & \AugDHo\sd{\AugDHoSd} & \AugRhoSyn\sd{\AugRhoSynSd} & \AugRhoInj\sd{\AugRhoInjSd} & \AugRhoHo\sd{\AugRhoHoSd} & \textbf{\AugWorst}\sd{\AugWorstSd} & \AugTopRS\sd{\AugTopRSSd} & \AugTopHo\sd{\AugTopHoSd} & \AugAUCHard\sd{\AugAUCHardSd} \\
+\mk{ctt}\ TT-sim & \textbf{\TTMAE}\sd{\TTMAESd} & \TTDSyn\sd{\TTDSynSd} & \TTDInj\sd{\TTDInjSd} & \TTDHo\sd{\TTDHoSd} & \TTRhoSyn\sd{\TTRhoSynSd} & \TTRhoInj\sd{\TTRhoInjSd} & \TTRhoHo\sd{\TTRhoHoSd} & \TTWorst\sd{\TTWorstSd} & \TTTopRS\sd{\TTTopRSSd} & \TTTopHo\sd{\TTTopHoSd} & \TTAUCHard\sd{\TTAUCHardSd} \\
+\mk{ccirc}\ Circuit contrast & \CircMAE\sd{\CircMAESd} & \textbf{\CircDSyn}\sd{\CircDSynSd} & \CircDInj\sd{\CircDInjSd} & \CircDHo\sd{\CircDHoSd} & \CircRhoSyn\sd{\CircRhoSynSd} & \CircRhoInj\sd{\CircRhoInjSd} & \CircRhoHo\sd{\CircRhoHoSd} & \CircWorst\sd{\CircWorstSd} & \CircTopRS\sd{\CircTopRSSd} & \CircTopHo\sd{\CircTopHoSd} & \CircAUCHard\sd{\CircAUCHardSd} \\
+\rowcolor{rowtint}\mk{cours}\ \ours & \OursMAE\sd{\OursMAESd} & \OursDSyn\sd{\OursDSynSd} & \textbf{\OursDInj}\sd{\OursDInjSd} & \textbf{\OursDHo}\sd{\OursDHoSd} & \textbf{\OursRhoSyn}\sd{\OursRhoSynSd} & \textbf{\OursRhoInj}\sd{\OursRhoInjSd} & \textbf{\OursRhoHo}\sd{\OursRhoHoSd} & \OursWorst\sd{\OursWorstSd} & \textbf{\OursTopRS}\sd{\OursTopRSSd} & \textbf{\OursTopHo}\sd{\OursTopHoSd} & \textbf{\OursAUCHard}\sd{\OursAUCHardSd} \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\newcommand{\FigAudit}{%
+\begin{figure*}[t]
+\centering
+\mainonly{\includegraphics[width=0.92\textwidth]{figs/fig_audit.pdf}}\extonly{\includegraphics[width=\textwidth]{figs/fig_audit.pdf}}
+\caption{\textbf{The audit on EPFL.} (a) Matched-gate degradation per family (H1, H2: held-out). (b)
+Consistency ratio $\rho$; gray band: the baseline's seed-to-seed disagreement over its error (training
+noise alone); H2 bars clipped, range above. (c) Per-circuit worst ratio over 16 adversarial variants. (d)
+$\rho$ within level bins (7 fixed families). (a, b): mean $\pm$ s.d., (c, d): pooled, over 5 seeds.}
+\label{fig:audit}
+\end{figure*}}
+\FigAudit
+
+% ===========================================================================
+\section{Experimental Setup}\label{sec:setup}
+% ===========================================================================
+\noindent\textbf{Data.} We extract random fanin cones from the EPFL combinational suite~\cite{epfl} and call each
+cone a \emph{circuit} (\GatesMin\ to \GatesMax\ gates, test median \GatesMed; up to \InMax\ inputs). Training uses 11 designs\extonly{ (bar,
+max, sin, multiplier, square, div, arbiter, mem\_ctrl, voter, i2c and priority)}; testing, the disjoint designs
+log2, sqrt, adder, cavlc, ctrl, int2float and router (dec yields none); \extonly{dec yields no circuit, since each of its outputs is a
+single 8-input minterm of 7 gates; }hyp, the largest
+EPFL design, unused in development, is held back as a confirmatory design (\cref{sec:generality}). Of the \NTrainConesAll\ training circuits, \NValCones\ form a
+validation split, and each training circuit is paired, in rotation, with one certified variant from S1 to S4 or injection at
+$r\in\{0.15,0.3\}$. Each of the \NTestCones\ test circuits has 7 fixed, 2 held-out and 16 adversarial variants (two
+circuits lack held-out ones\extonly{: the don't-care pass of H1 crashes on them, and it runs in the same process as H2}). A second, test-only suite of \ISCones\
+circuits comes from ISCAS85 and ISCAS89's combinational cores (\cref{sec:generality}). Labels $p_v$ come
+from 4{,}096 random input patterns shared by a circuit and its variants, so proven pairs share
+labels.
+
+\noindent\textbf{Training and selection.} All regimes use the same encoder, Adam with a one-cycle cosine
+schedule (peak $2\!\times\!10^{-3}$, chosen from $\{2,1,0.5\}\!\times\!10^{-3}$ on the baseline's validation MAE), gradient clipping
+at 1.0, 16-circuit batches, 12 epochs and 5 seeds, on GPUs (PyTorch~2.7).
+Loss weights are chosen on validation by one rule, the highest restructured retrieval with validation MAE within
+25\% of the baseline: $\lambda=\LamStar$\extonly{ from $\{0.05,0.1,0.2,0.5,1,2\}$}, $\lambda_{\mathrm{TT}}=\TTLamStar$\extonly{ from
+$\{0.03,0.1,0.5,1,2\}$}, and $\lambda_{\mathrm C}=\CircLamStar$\extonly{ from $\{0.05,0.2,0.5,1\}$}\mainonly{ (grids in the extended version)}\extonly{; $L_1$ alignment takes $\LoneLam$ from
+$\{0.0003,0.001,0.003,0.01,0.03\}$ and $L_1$ alignment + TT-sim $\LonettLam$ from $\{0.001,0.003,0.01\}$}. An exploratory version\extonly{ (constant learning rate, signature-only matching,
+no projection)} saw the test designs before this protocol was fixed; every reported model was retrained under it, and
+no test result entered selection or tuning.
+
+\noindent\textbf{GPU and CPU runs.} Results come from this \emph{GPU run} unless marked. An earlier \emph{CPU run}
+(PyTorch~2.15, 3 seeds), which the GPU run reproduces on 67 of 68 metrics with preset tolerances\extonly{ (\cref{app:repro})}, supplies only the
+hyp results, \cref{fig:overview}'s pair, \cref{fig:sweep}b's timings, the solver test of \cref{sec:rq1} and the \extonly{released-model audits (Public rows of \cref{tab:general})}\mainonly{Public rows of \cref{tab:general}}.
+
+\noindent\textbf{Statistics.} The EPFL test circuits come from 7 designs and overlap within a design,
+so circuit-level tests would overstate significance. To compare two regimes we average each design over its
+circuits and seeds, and report the mean difference with a 95\% cluster-bootstrap confidence interval (CI)
+(${\ge}5{,}000$ design resamples~\cite{DBLP:books/sp/EfronT93}) and a two-sided sign test (smallest attainable $p$ with 7 EPFL
+designs: 0.016; Holm-adjusted over regimes on the 17 ISCAS designs); for the 4 large-circuit designs (\cref{sec:generality}),
+Holm-adjusted Welch tests over seeds.
+
+% ===========================================================================
+\section{Results}\label{sec:results}
+% ===========================================================================
+\extonly{\noindent Each subsection answers one research question (RQ1 to RQ4); \cref{tab:main,fig:audit} summarize the
+audit of RQ1.}
+% ===========================================================================
+\input{results}
+
+% ===========================================================================
+% Extended version: a full Threats to Validity section; the 7-page version states its limitations at the end of the
+% Conclusion instead (a section heading there would cost the space the limitations need).
+\extonly{
+\section{Threats to Validity}\label{sec:limits}
+\noindent\textbf{Task.} Signal probability is the only function-level prediction we audit, and SAT sweeping and
+CASCAD's phase rule (also given to CaDiCaL, \cref{app:solver}) are the only downstream uses we probe; other tasks may show other degrees of blindness. The audit
+itself does not depend on the task: any per-gate prediction or embedding can be compared across certified variants.
+\textbf{Rewrites.} Training synthesis comes from one library (mockturtle, through aigverse); four ABC scripts test transfer
+to another tool (\cref{app:abc}), and commercial flows may restructure differently. Injection is a stress test, not a realistic flow, so every family is reported separately.
+\textbf{Circuits.} All circuits are combinational AIGs; ISCAS89 enters through its combinational cores. Training circuits
+have under 400 gates and swept designs at most 1{,}020; larger test circuits are those certified within \LgTimeoutMin\
+minutes (\LgTimeout\ of \LgBuilt\ timed out), and on them \ours's MAE exceeds the baseline's by \LgMaePct\%, beyond our
+25\% tolerance. \textbf{Scale.} Our largest encoder has \ScMaxParams\ parameters; beyond our own encoders we audit only the
+five published checkpoints of \cref{tab:general}. \textbf{Labels.} Signal probabilities assume uniform
+inputs and carry sampling noise of about $10^{-2}$, on which inconsistency does not depend. \textbf{Statistics.} Seven
+EPFL test designs bound the design-level sign test at $p\ge0.016$; we therefore report intervals and per-design counts,
+and confirm on the 17 ISCAS designs and on hyp, which no stage of development used but which is a single design
+(\HypCones\ circuits). \textbf{Retrieval.} Matching records the first proven equivalent of each variant gate, so a
+different but equivalent nearest gate counts as a miss (\cref{app:matching}); reported retrieval is a lower bound.
+\textbf{Released checkpoints.} We share the random primary-input vectors of DeepGate2 and DeepGate3 across a rewrite; this
+raises some retrievals by about 5 points and changes no conclusion (\cref{app:pi}). \textbf{GPU and CPU runs.} The GPU run
+reproduces the CPU run on 67 of 68 comparable metrics (\cref{app:repro}); each result names its run.
+\textbf{Selection.} Learning rate and loss weights are chosen on validation circuits of the training designs only, and
+picks at the edge of a grid are reported, not re-tuned.
+}
+% ===========================================================================
+\section{Conclusion}
+% ===========================================================================
+With SAT proofs of equivalence, \audit\ makes the premise of circuit representation learning testable: a
+function-trained encoder changes its answer for a fixed function by about as much as it errs. Among our regimes, certified data and
+alignment without negatives steady the predictions, only contrastive alignment of matched gates partly repairs the
+representation, and none survives an unseen kind of rewrite.
+
+\mainonly{\noindent\textbf{Limitations.} We audit one function-level task, signal probability, with two downstream probes;
+other tasks may differ. Synthesis comes from mockturtle and ABC, and injection is a stress test, not a realistic flow.
+Training circuits have under 400 gates, swept designs at most 1{,}020, and our largest encoder \ScMaxParams\ parameters;
+larger test circuits are those certified within \LgTimeoutMin\ minutes (\LgTimeout\ of \LgBuilt\ timed out), and on them
+\ours's MAE exceeds the baseline's by \LgMaePct\%, beyond our 25\% tolerance. Seven EPFL test designs bound the sign
+test at $p\ge0.016$, so ISCAS and hyp carry the confirmation (\cref{sec:generality}).}
+
+\mainonly{\noindent}We propose certified equivalence as a standard check; the held-out failure motivates encoders
+invariant by construction.
+
+% Camera-ready: the Acknowledgment section goes here (removed for blind review).
+\section*{Content Generated by AI}
+The authors used Claude Opus 5.5 to assist with copyediting, grammar checking, and the retouching and fine refinement of all figures in the paper. The authors take full
+responsibility for the accuracy and integrity of this paper.

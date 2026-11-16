@@ -1,0 +1,254 @@
+\begin{thebibliography}{10}
+
+\bibitem{DBLP:conf/dac/0019KSWY022}
+M.~Li, S.~Khan, Z.~Shi, N.~Wang, Y.~Huang, and Q.~Xu, ``{DeepGate: learning
+  neural representations of logic gates},'' in {\em Proc. {DAC}'22},
+  pp.~667--672, {ACM}, 2022.
+
+\bibitem{DBLP:conf/iccad/ShiPKLLHZYCX23}
+Z.~Shi, H.~Pan, S.~Khan, M.~Li, Y.~Liu, J.~Huang, H.~Zhen, M.~Yuan, Z.~Chu, and
+  Q.~Xu, ``{DeepGate2: Functionality-Aware Circuit Representation Learning},''
+  in {\em Proc. {ICCAD}'23}, pp.~1--9, {IEEE}, 2023.
+
+\bibitem{DBLP:conf/iccad/ShiZKZ0024}
+Z.~Shi, Z.~Zheng, S.~Khan, J.~Zhong, M.~Li, and Q.~Xu, ``{DeepGate3: Towards
+  Scalable Circuit Representation Learning},'' in {\em Proc. {ICCAD}'24},
+  pp.~184:1--184:9, {ACM}, 2024.
+
+\bibitem{DBLP:conf/iclr/ZhengHZSDX025}
+Z.~Zheng, S.~Huang, J.~Zhong, Z.~Shi, G.~Dai, N.~Xu, and Q.~Xu, ``{DeepGate4:
+  Efficient and Effective Representation Learning for Circuit Design at
+  Scale},'' in {\em Proc. {ICLR}'25}, OpenReview.net, 2025.
+
+\bibitem{DBLP:conf/dac/WangBHZXHYH22}
+Z.~Wang, C.~Bai, Z.~He, G.~Zhang, Q.~Xu, T.~Ho, B.~Yu, and Y.~Huang,
+  ``Functionality matters in netlist representation learning,'' in {\em Proc.
+  {DAC}'22}, pp.~61--66, {ACM}, 2022.
+
+\bibitem{DBLP:conf/iccad/0006ZZLY024}
+J.~Liu, J.~Zhai, M.~Zhao, Z.~Lin, B.~Yu, and C.~Shi, ``{PolarGate: Breaking the
+  Functionality Representation Bottleneck of And-Inverter Graph Neural
+  Network},'' in {\em Proc. {ICCAD}'24}, pp.~185:1--185:9, {ACM}, 2024.
+
+\bibitem{DBLP:conf/dac/DengYYSCJZ24}
+C.~Deng, Z.~Yue, C.~Yu, G.~Sarar, R.~Carey, R.~Jain, and Z.~Zhang, ``Less is
+  more: Hop-wise graph attention for scalable and generalizable learning on
+  circuits,'' in {\em Proc. {DAC}'24}, pp.~175:1--175:6, {ACM}, 2024.
+
+\bibitem{DBLP:conf/dac/FangLLLZX25}
+W.~Fang, W.~Li, S.~Liu, Y.~Lu, H.~Zhang, and Z.~Xie, ``{NetTAG: A Multimodal
+  RTL-and-Layout-Aligned Netlist Foundation Model via Text-Attributed Graph},''
+  in {\em Proc. {DAC}'25}, pp.~1--7, {IEEE}, 2025.
+
+\bibitem{DBLP:journals/trets/ZhaoGZWLJ26}
+Q.~Zhao, S.~Guo, W.~Zhao, N.~Wang, X.~Li, and H.~Jiang, ``{FuncGNN}: Learning
+  functional semantics of logic circuits with graph neural networks,'' {\em
+  {ACM} Trans. Reconfigurable Technol. Syst.}, vol.~19, no.~2, pp.~31:1--31:24,
+  2026.
+
+\bibitem{DBLP:conf/iccad/ShiMZZPJYYCX25}
+Z.~Shi, C.~Ma, Z.~Zheng, L.~Zhou, H.~Pan, W.~Jiang, F.~Yang, X.~Yang, Z.~Chu,
+  and Q.~Xu, ``{DeepCell: Self-Supervised Multiview Fusion for Circuit
+  Representation Learning},'' in {\em Proc. {ICCAD}'25}, pp.~1--9, {IEEE},
+  2025.
+
+\bibitem{DBLP:journals/corr/abs-2504-03711}
+W.~Fang, J.~Wang, Y.~Lu, S.~Liu, Y.~Wu, Y.~Ma, and Z.~Xie, ``{A Survey of
+  Circuit Foundation Model: Foundation AI Models for VLSI Circuit Design and
+  EDA},'' {\em CoRR}, vol.~abs/2504.03711, 2025.
+
+\bibitem{DBLP:conf/dac/MishchenkoCB06}
+A.~Mishchenko, S.~Chatterjee, and R.~K. Brayton, ``{DAG-aware AIG rewriting a
+  fresh look at combinational logic synthesis},'' in {\em Proc. {DAC}'06},
+  pp.~532--535, {ACM}, 2006.
+
+\bibitem{DBLP:conf/cav/BraytonM10}
+R.~K. Brayton and A.~Mishchenko, ``{ABC: An Academic Industrial-Strength
+  Verification Tool},'' in {\em Proc. {CAV}'10}, vol.~6174 of {\em Lecture
+  Notes in Computer Science}, pp.~24--40, Springer, 2010.
+
+\bibitem{DBLP:journals/corr/abs-2508-04235}
+J.~Zhu, Z.~Zheng, Z.~Shi, Y.~Cai, and Q.~Xu, ``{Circuit-Aware SAT Solving:
+  Guiding CDCL via Conditional Probabilities},'' {\em CoRR},
+  vol.~abs/2508.04235, 2025.
+
+\bibitem{DBLP:conf/dac/ZhengZZX26}
+Z.~Zheng, J.~Zhu, J.~Zhou, and Q.~Xu, ``{TRACE: Learning to Compute on Circuit
+  Graphs},'' in {\em Proc. {DAC}'26}, pp.~562:1--562:7, {ACM}, 2026.
+
+\bibitem{DBLP:conf/iclr/WuZ0025}
+H.~Wu, H.~Zheng, Y.~Pu, and B.~Yu, ``{Circuit Representation Learning with
+  Masked Gate Modeling and Verilog-AIG Alignment},'' in {\em Proc. {ICLR}'25},
+  OpenReview.net, 2025.
+
+\bibitem{DBLP:conf/nips/ZhengLSX25}
+Z.~Zheng, K.~Li, Z.~Shi, and Q.~Xu, ``{Functional Matching of Logic Subgraphs:
+  Beyond Structural Isomorphism},'' in {\em Advances of {NeurIPS}'25}, 2025.
+
+\bibitem{DBLP:journals/corr/abs-2610-09549}
+Q.~Zhang, R.~Li, F.~Zhang, Q.~Ma, H.~Li, F.~Zhan, Y.~Wang, L.~Hao, and S.~Guo,
+  ``{CircuitGate: Logic-Consistent Circuit-Level Functional Modeling for
+  And-Inverter Graphs},'' {\em CoRR}, vol.~abs/2610.09549, 2026.
+
+\bibitem{DBLP:journals/corr/abs-2509-20968}
+Z.~Shi, J.~Wang, W.~Jiang, C.~Ma, Z.~Zheng, Z.~Chu, W.~Qian, and Q.~Xu,
+  ``Alignment unlocks complementarity: A framework for multiview circuit
+  representation learning,'' {\em CoRR}, vol.~abs/2509.20968, 2025.
+
+\bibitem{DBLP:journals/tcad/WangBHZXHHY25}
+Z.~Wang, C.~Bai, Z.~He, G.~Zhang, Q.~Xu, T.~Ho, Y.~Huang, and B.~Yu, ``{FGNN2:
+  A Powerful Pretraining Framework for Learning the Logic Functionality of
+  Circuits},'' {\em {IEEE} Trans. Comput. Aided Des. Integr. Circuits Syst.},
+  vol.~44, no.~1, pp.~227--240, 2025.
+
+\bibitem{DBLP:conf/aspdac/FangLZX25}
+W.~Fang, S.~Liu, H.~Zhang, and Z.~Xie, ``A self-supervised, pre-trained, and
+  cross-stage-aligned circuit encoder provides a foundation for various design
+  tasks,'' in {\em Proc. {ASPDAC}'25}, pp.~505--512, {ACM}, 2025.
+
+\bibitem{DBLP:conf/emnlp/ChoMGBBSB14}
+K.~Cho, B.~van Merrienboer, {\c{C}}.~G{\"{u}}l{\c{c}}ehre, D.~Bahdanau,
+  F.~Bougares, H.~Schwenk, and Y.~Bengio, ``Learning phrase representations
+  using {RNN} encoder-decoder for statistical machine translation,'' in {\em
+  Proc. {EMNLP}'14}, pp.~1724--1734, {ACL}, 2014.
+
+\bibitem{DBLP:conf/dac/WuLHDYX23}
+N.~Wu, Y.~Li, C.~Hao, S.~Dai, C.~Yu, and Y.~Xie, ``Gamora: Graph learning based
+  symbolic reasoning for large-scale {Boolean} networks,'' in {\em Proc.
+  {DAC}'23}, pp.~1--6, {IEEE}, 2023.
+
+\bibitem{DBLP:conf/iclr/FangLWX25}
+W.~Fang, S.~Liu, J.~Wang, and Z.~Xie, ``{CircuitFusion: Multimodal Circuit
+  Representation Learning for Agile Chip Design},'' in {\em Proc. {ICLR}'25},
+  OpenReview.net, 2025.
+
+\bibitem{DBLP:conf/iclr/XuHLJ19}
+K.~Xu, W.~Hu, J.~Leskovec, and S.~Jegelka, ``How powerful are graph neural
+  networks?,'' in {\em Proc. {ICLR}'19}, OpenReview.net, 2019.
+
+\bibitem{DBLP:journals/corr/abs-2002-12543}
+T.~Y. Chen, S.~Cheung, and S.~Yiu, ``{Metamorphic Testing: A New Approach for
+  Generating Next Test Cases},'' {\em CoRR}, vol.~abs/2002.12543, 2020.
+
+\bibitem{DBLP:journals/tse/SeguraFSC16}
+S.~Segura, G.~Fraser, A.~B. S{\'{a}}nchez, and A.~R. Cort{\'{e}}s, ``{A Survey
+  on Metamorphic Testing},'' {\em {IEEE} Trans. Software Eng.}, vol.~42, no.~9,
+  pp.~805--824, 2016.
+
+\bibitem{DBLP:conf/acl/RibeiroWGS20}
+M.~T. Ribeiro, T.~Wu, C.~Guestrin, and S.~Singh, ``{Beyond Accuracy: Behavioral
+  Testing of NLP Models with CheckList},'' in {\em Proc. {ACL}'20},
+  pp.~4902--4912, Association for Computational Linguistics, 2020.
+
+\bibitem{DBLP:conf/dac/ChengYDAZF25}
+W.~Cheng, Y.~Yuan, C.~Deng, A.~Aghdaei, Z.~Zhang, and Z.~Feng, ``{CirSTAG}:
+  Circuit stability analysis on graph-based manifolds,'' in {\em Proc.
+  {DAC}'25}, pp.~1--7, {IEEE}, 2025.
+
+\bibitem{DBLP:conf/kdd/ZugnerAG18}
+D.~Z{\"{u}}gner, A.~Akbarnejad, and S.~G{\"{u}}nnemann, ``Adversarial attacks
+  on neural networks for graph data,'' in {\em Proc. {KDD}'18}, pp.~2847--2856,
+  {ACM}, 2018.
+
+\bibitem{attackgnn}
+V.~Gohil, S.~Patnaik, D.~Kalathil, and J.~Rajendran, ``{AttackGNN}: Red-teaming
+  {GNNs} in hardware security using reinforcement learning,'' in {\em Proc.
+  {USENIX} Security'24}, 2024.
+
+\bibitem{DBLP:conf/glvlsi/ZhaoS22}
+G.~Zhao and K.~Shamsi, ``Graph neural network based netlist operator detection
+  under circuit rewriting,'' in {\em Proc. {GLSVLSI}'22}, pp.~53--58, {ACM},
+  2022.
+
+\bibitem{rewrite_adv}
+G.~Zhao and K.~Shamsi, ``Adversarial circuit rewriting against graph neural
+  network-based operator detection,'' {\em {ACM} Trans. Des. Autom. Electron.
+  Syst.}, vol.~30, no.~1, pp.~14:1--14:19, 2024.
+
+\bibitem{DBLP:conf/wcre/HenkelRWAJR22}
+J.~Henkel, G.~Ramakrishnan, Z.~Wang, A.~Albarghouthi, S.~Jha, and T.~W. Reps,
+  ``{Semantic Robustness of Models of Source Code},'' in {\em Proc.
+  {SANER}'22}, pp.~526--537, {IEEE}, 2022.
+
+\bibitem{DBLP:conf/emnlp/0001JZA0S21}
+P.~Jain, A.~Jain, T.~Zhang, P.~Abbeel, J.~Gonzalez, and I.~Stoica,
+  ``Contrastive code representation learning,'' in {\em Proc. {EMNLP}'21},
+  pp.~5954--5971, Association for Computational Linguistics, 2021.
+
+\bibitem{DBLP:conf/nips/ChenDL20}
+S.~Chen, E.~Dobriban, and J.~H. Lee, ``A group-theoretic framework for data
+  augmentation,'' in {\em Advances of {NeurIPS}'20}, 2020.
+
+\bibitem{DBLP:journals/tcad/KuehlmannPKG02}
+A.~Kuehlmann, V.~Paruthi, F.~Krohm, and M.~K. Ganai, ``Robust {Boolean}
+  reasoning for equivalence checking and functional property verification,''
+  {\em {IEEE} Trans. Comput. Aided Des. Integr. Circuits Syst.}, vol.~21,
+  no.~12, pp.~1377--1394, 2002.
+
+\bibitem{fraig}
+A.~Mishchenko, S.~Chatterjee, R.~Jiang, and R.~Brayton, ``{FRAIGs: A Unifying
+  Representation for Logic Synthesis and Verification},'' tech. rep., EECS
+  Department, UC Berkeley, 2005.
+
+\bibitem{DBLP:conf/iccad/MishchenkoCBE06}
+A.~Mishchenko, S.~Chatterjee, R.~K. Brayton, and N.~E{\'{e}}n, ``Improvements
+  to combinational equivalence checking,'' in {\em Proc. {ICCAD}'06},
+  pp.~836--843, {ACM}, 2006.
+
+\bibitem{DBLP:journals/corr/abs-1805-05121}
+M.~Soeken, H.~Riener, W.~Haaswijk, and G.~{De Micheli}, ``The {EPFL} logic
+  synthesis libraries,'' {\em CoRR}, vol.~abs/1805.05121, 2018.
+
+\bibitem{aigverse}
+M.~Walter {\em et~al.}, ``aigverse: A {P}ython library for logic networks,
+  synthesis, and optimization,'' 2026.
+\newblock Version 0.1.7.
+
+\bibitem{cadical2020}
+A.~Biere, K.~Fazekas, M.~Fleury, and M.~Heisinger, ``{CaDiCaL}, {Kissat},
+  {Paracooba}, {Plingeling} and {Treengeling} entering the {SAT} {C}ompetition
+  2020,'' in {\em Proc. {SAT} Competition'20}, 2020.
+
+\bibitem{DBLP:conf/sat/IgnatievMM18}
+A.~Ignatiev, A.~Morgado, and J.~Marques{-}Silva, ``{PySAT}: A {Python} toolkit
+  for prototyping with {SAT} oracles,'' in {\em Proc. {SAT}'18}, vol.~10929 of
+  {\em Lecture Notes in Computer Science}, pp.~428--437, Springer, 2018.
+
+\bibitem{tseitin}
+G.~S. Tseitin, ``On the complexity of derivation in propositional calculus,''
+  in {\em Automation of Reasoning: Classical Papers on Computational Logic
+  1967--1970}, pp.~466--483, Springer, 1983.
+
+\bibitem{DBLP:journals/corr/abs-1807-03748}
+A.~van~den Oord, Y.~Li, and O.~Vinyals, ``Representation learning with
+  contrastive predictive coding,'' {\em CoRR}, vol.~abs/1807.03748, 2018.
+
+\bibitem{DBLP:conf/icml/ChenK0H20}
+T.~Chen, S.~Kornblith, M.~Norouzi, and G.~E. Hinton, ``A simple framework for
+  contrastive learning of visual representations,'' in {\em Proc. {ICML}'20},
+  vol.~119 of {\em Proceedings of Machine Learning Research}, pp.~1597--1607,
+  {PMLR}, 2020.
+
+\bibitem{epfl}
+L.~Amar{\`u}, P.-E. Gaillardon, and G.~{De Micheli}, ``The {EPFL} combinational
+  benchmark suite,'' in {\em Proc. {IWLS}'15}, 2015.
+
+\bibitem{DBLP:books/sp/EfronT93}
+B.~Efron and R.~Tibshirani, {\em An Introduction to the Bootstrap}.
+\newblock Springer, 1993.
+
+\bibitem{DBLP:journals/tc/ParkerM75}
+K.~P. Parker and E.~J. McCluskey, ``Probabilistic treatment of general
+  combinational networks,'' {\em {IEEE} Trans. Computers}, vol.~24, no.~6,
+  pp.~668--670, 1975.
+
+\bibitem{iscas85}
+F.~Brglez and H.~Fujiwara, ``A neutral netlist of 10 combinational benchmark
+  circuits and a target translator in {Fortran},'' in {\em Proc. {ISCAS}'85},
+  pp.~663--698, 1985.
+
+\bibitem{iscas89}
+F.~Brglez, D.~Bryan, and K.~Kozminski, ``Combinational profiles of sequential
+  benchmark circuits,'' in {\em Proc. {ISCAS}'89}, pp.~1929--1934 vol.3, 1989.
+
+\end{thebibliography}

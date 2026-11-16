@@ -1,0 +1,10 @@
+# Python 3.11 recommended (3.10 to 3.13 work). Install PyTorch with CUDA first (README step 1), then:
+#   pip install -r requirements.txt
+# Tested together (CPU) with: python 3.13, torch 2.15, torch_geometric 2.8.1, numpy 2.5, scipy 1.18, aigverse 0.1.7,
+# python-sat 1.9.dev17, py-aiger 8.1.0. GPU runs need only a CUDA build of torch on top.
+numpy>=2.0
+scipy>=1.11
+aigverse==0.1.7
+python-sat>=1.8.dev16
+torch_geometric>=2.5
+py-aiger==8.1.0

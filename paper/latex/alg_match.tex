@@ -1,0 +1,23 @@
+\begin{figure}[h]
+\centering
+\begin{minipage}{0.92\textwidth}
+\hrule\smallskip
+\textbf{Algorithm 1} SAT-proven gate matching between $G$ and its variant $G'$\smallskip\hrule\smallskip
+\begin{tabbing}
+\quad\=\quad\=\quad\=\kill
+\textbf{Input:} $G$, $G'$ with shared PIs; $N=4{,}096$ random input patterns\\
+1:\>Simulate both circuits on the $N$ patterns; canonical signature $\sigma(w)$ = signature, complemented if its first bit is 1\\
+2:\>$B\leftarrow$ buckets of the gates of $G$ by $\sigma$\\
+3:\>Tseitin-encode $G$ and $G'$ into one incremental SAT instance with shared PI variables\\
+4:\>\textbf{for} each AND gate $u$ of $G'$ \textbf{do}\\
+5:\>\>\textbf{for} each $v\in B[\sigma(u)]$ in topological order \textbf{do}\\
+6:\>\>\>$\pi\leftarrow[\,\text{signatures of } v \text{ and } u \text{ differ}\,]$; add $t\Rightarrow(x_v\oplus x_u\oplus\pi)$ for a fresh $t$\\
+7:\>\>\>\textbf{if} \textsc{Solve}(assume $t$) = UNSAT \textbf{then} record $(v,u,\pi)$; disable $t$; \textbf{break}\\
+8:\>\>\>\textbf{else} disable $t$ \quad\emph{(a counterexample: $u$ and $v$ differ)}\\
+\textbf{Output:} proven pairs $(v,u,\pi)$ with $f_u=f_v\oplus\pi$
+\end{tabbing}
+\hrule
+\end{minipage}
+\caption{Matching procedure. Every recorded pair carries a SAT proof; signature agreement alone is never accepted.}
+\label{alg:match}
+\end{figure}

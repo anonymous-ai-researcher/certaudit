@@ -1,0 +1,39 @@
+\begin{tabular}{l cc cccc}
+\toprule
+ & \multicolumn{2}{c}{Validation} & \multicolumn{4}{c}{Test (seen families)} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-7}
+Variant & MAE & Top-1 & MAE & $\rho$ & Top-1 & AUROC$_\mathrm{lvl}$ \\
+\midrule
+Baseline & 0.0148 & 33.9 & 0.0189 & 0.97 & 41.5 & 0.766 \\
+Augmentation & 0.0152 & 36.8 & 0.0177 & 0.86 & 44.8 & 0.785 \\
+\midrule
+\ours\ $\lambda$=0.05 & 0.0145 & 53.7 & 0.0183 & 0.80 & 61.6 & 0.856 \\
+\ours\ $\lambda$=0.1 & 0.0151 & 57.0 & 0.0191 & 0.81 & 62.5 & 0.838 \\
+\ours\ $\lambda$=0.2$^\star$ & 0.0166 & 58.7 & 0.0228 & 0.70 & 62.2 & 0.844 \\
+\ours\ $\lambda$=0.5 & 0.0192 & 58.3 & 0.0258 & 0.72 & 60.9 & 0.858 \\
+\ours\ $\lambda$=1 & 0.0218 & 58.5 & 0.0248 & 0.78 & 61.8 & 0.859 \\
+\ours\ $\lambda$=2 & 0.0243 & 58.5 & 0.0289 & 0.73 & 61.7 & 0.851 \\
+\ours\ no proj., $\lambda$=0.2 & 0.0161 & 55.9 & 0.0244 & 0.85 & 59.6 & 0.831 \\
+\midrule
+TT-sim $\lambda_{\mathrm{TT}}$=0.03$^\star$ & 0.0150 & 34.9 & 0.0171 & 0.94 & 40.9 & 0.768 \\
+TT-sim $\lambda_{\mathrm{TT}}$=0.1 & 0.0148 & 34.8 & 0.0169 & 0.91 & 41.6 & 0.769 \\
+TT-sim $\lambda_{\mathrm{TT}}$=0.5 & 0.0150 & 33.4 & 0.0172 & 0.94 & 41.0 & 0.782 \\
+TT-sim $\lambda_{\mathrm{TT}}$=1 & 0.0149 & 33.1 & 0.0175 & 0.99 & 38.2 & 0.753 \\
+TT-sim $\lambda_{\mathrm{TT}}$=2 & 0.0153 & 32.0 & 0.0174 & 1.03 & 35.6 & 0.791 \\
+\midrule
+Circuit contrast $\lambda_{\mathrm{C}}$=0.05 & 0.0148 & 37.7 & 0.0180 & 0.89 & 43.3 & 0.788 \\
+Circuit contrast $\lambda_{\mathrm{C}}$=0.2$^\star$ & 0.0167 & 39.1 & 0.0186 & 0.97 & 41.3 & 0.821 \\
+Circuit contrast $\lambda_{\mathrm{C}}$=0.5 & 0.0284 & 34.5 & 0.0307 & 0.80 & 36.6 & 0.800 \\
+Circuit contrast $\lambda_{\mathrm{C}}$=1 & 0.0318 & 33.3 & 0.0411 & 0.71 & 36.2 & 0.790 \\
+\midrule
+$L_1$ alignment $\lambda$=0.0003$^\star$ & 0.0156 & 37.3 & 0.0173 & 0.91 & 46.3 & 0.802 \\
+$L_1$ alignment $\lambda$=0.001 & 0.0162 & 37.0 & 0.0180 & 0.88 & 46.4 & 0.788 \\
+$L_1$ alignment $\lambda$=0.003 & 0.0168 & 36.6 & 0.0177 & 0.89 & 46.2 & 0.792 \\
+$L_1$ alignment $\lambda$=0.01 & 0.0176 & 34.4 & 0.0176 & 0.88 & 43.7 & 0.772 \\
+$L_1$ alignment $\lambda$=0.03 & 0.1269 & 1.6 & 0.1387 & 0.41 & 0.0 & 0.441 \\
+\midrule
+$L_1$ alignment + TT-sim $\lambda$=0.001 & 0.0149 & 36.9 & 0.0174 & 0.89 & 44.8 & 0.782 \\
+$L_1$ alignment + TT-sim $\lambda$=0.003$^\star$ & 0.0157 & 37.3 & 0.0178 & 0.83 & 45.0 & 0.767 \\
+$L_1$ alignment + TT-sim $\lambda$=0.01 & 0.0169 & 35.9 & 0.0194 & 0.80 & 45.1 & 0.778 \\
+\bottomrule
+\end{tabular}

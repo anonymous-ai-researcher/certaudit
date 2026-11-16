@@ -1,0 +1,19 @@
+\begin{table}[h]
+\centering
+\caption{Per test design: MAE on original circuits / restructured Top-1 (\%), mean over seeds.}
+\label{tab:app_design}
+\footnotesize
+\begin{tabular}{lrccccc}
+\toprule
+Design & circuits & Baseline & Augmentation & TT-sim & Circuit contrast & \ours \\
+\midrule
+adder & 60 & 0.0280 / 25.1 & 0.0216 / 28.3 & 0.0177 / 28.7 & 0.0137 / 27.3 & 0.0225 / 41.7 \\
+log2 & 60 & 0.0166 / 27.0 & 0.0162 / 30.4 & 0.0158 / 30.4 & 0.0216 / 29.4 & 0.0235 / 46.3 \\
+sqrt & 60 & 0.0218 / 46.7 & 0.0213 / 51.7 & 0.0215 / 49.1 & 0.0236 / 49.6 & 0.0214 / 76.3 \\
+cavlc & 60 & 0.0177 / 49.4 & 0.0177 / 54.8 & 0.0177 / 52.1 & 0.0204 / 50.7 & 0.0212 / 79.2 \\
+ctrl & 16 & 0.0596 / 31.4 & 0.0639 / 34.2 & 0.0629 / 33.3 & 0.0639 / 30.4 & 0.0640 / 43.4 \\
+int2float & 60 & 0.0112 / 51.0 & 0.0112 / 54.8 & 0.0106 / 50.2 & 0.0145 / 47.1 & 0.0142 / 74.6 \\
+router & 60 & 0.0072 / 49.3 & 0.0072 / 49.9 & 0.0074 / 46.6 & 0.0138 / 42.3 & 0.0157 / 67.6 \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,13 @@
+Circuit representation models such as DeepGate are trained to capture what each gate computes, so gates computing the same
+Boolean function should get the same predicted signal probability (the chance of outputting 1) and nearby embeddings however the
+surrounding logic is rewritten. We test this premise with \audit, which rewrites circuits by logic synthesis and by
+adding redundant logic and proves with SAT that each rewrite preserves function and which gates correspond. The
+premise fails. On \NTestCones\ EPFL test circuits, re-synthesis keeps a DeepGate-style model accurate yet moves its
+prediction for a fixed function by about as much as it errs, enough to change the phase hints it gives a SAT
+solver, at every size up to \ScMaxParams\ parameters. An XOR-based rewrite unseen in training breaks every model's
+predictions, and for five released encoders, two of them trained for equivalence, it at least halves
+how often a rewritten gate's nearest original gate in embedding space is its proven equivalent. Training on
+certified rewrites steadies predictions, mostly against redundancy, but only aligning proven-equivalent gates
+(\ours) raises this rate on seen rewrites from \BaseTopRS\% to \OursTopRS\%, beyond what 4$\times$ more unaligned rewrites
+reach; fine-tuning released DeepGate2 with \ours\ reaches \FtEqTopSeen\% (\FtCtrlTopSeen\% with its original loss).
+No tested repair survives the unseen rewrite.

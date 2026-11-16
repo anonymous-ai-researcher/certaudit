@@ -1,0 +1,13 @@
+\begin{tabular}{lcccccccccc}
+\toprule
+ & \multicolumn{2}{c}{resyn2} & \multicolumn{2}{c}{dc2} & \multicolumn{2}{c}{compress2rs} & \multicolumn{2}{c}{LUT round trip} & \multicolumn{2}{c}{all four} \\
+Model & Top-1 & $\rho$ & Top-1 & $\rho$ & Top-1 & $\rho$ & Top-1 & $\rho$ & Top-1 & $\rho$ \\
+\midrule
+Baseline & 45.0 & 0.79 & 33.0 & 0.92 & 40.6 & 0.80 & 38.2 & 0.90 & 39.0 & 0.86 \\
+Augmentation & 44.4 & 0.82 & 36.3 & 0.93 & 39.8 & 0.83 & 40.6 & 0.89 & 40.3 & 0.88 \\
+ \hl \ours & \hl \textbf{61.4} & \hl \textbf{0.73} & \hl \textbf{53.2} & \hl \textbf{0.82} & \hl \textbf{54.8} & \hl \textbf{0.76} & \hl \textbf{51.7} & \hl \textbf{0.85} & \hl \textbf{55.3} & \hl \textbf{0.79} \\
+\midrule
+DG2 FT, own loss & 50.3 & 0.53 & 31.7 & 0.73 & 46.9 & 0.59 & 40.0 & 0.71 & 42.0 & 0.65 \\
+ \hl DG2 FT, \ours & \hl \textbf{74.8} & \hl \textbf{0.51} & \hl \textbf{60.9} & \hl \textbf{0.71} & \hl \textbf{70.2} & \hl \textbf{0.54} & \hl \textbf{64.5} & \hl \textbf{0.67} & \hl \textbf{67.7} & \hl \textbf{0.61} \\
+\bottomrule
+\end{tabular}

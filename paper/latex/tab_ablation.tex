@@ -1,0 +1,19 @@
+\begin{tabular}{l cc cccc}
+\toprule
+ & \multicolumn{2}{c}{Validation} & \multicolumn{4}{c}{Test (seen families)} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-7}
+Variant & MAE & Top-1 & MAE & $\rho$ & Top-1 & AUROC$_\mathrm{lvl}$ \\
+\midrule
+Baseline & 0.0148 & 33.9 & 0.0189 & 0.97 & 41.5 & 0.766 \\
+Augmentation & 0.0152 & 36.8 & 0.0177 & 0.86 & 44.8 & 0.785 \\
+\midrule
+\ours\ $\lambda$=0.05 & 0.0145 & 53.7 & 0.0183 & 0.80 & 61.6 & 0.856 \\
+\ours\ $\lambda$=0.1 & 0.0151 & 57.0 & 0.0191 & 0.81 & 62.5 & 0.838 \\
+\ours\ $\lambda$=0.2$^\star$ & 0.0166 & 58.7 & 0.0228 & 0.70 & 62.2 & 0.844 \\
+\ours\ $\lambda$=0.5 & 0.0192 & 58.3 & 0.0258 & 0.72 & 60.9 & 0.858 \\
+\ours\ no proj., $\lambda$=0.2 & 0.0161 & 55.9 & 0.0244 & 0.85 & 59.6 & 0.831 \\
+\midrule
+TT-sim $\lambda_{\mathrm{TT}}$=0.03$^\star$ & 0.0150 & 34.9 & 0.0171 & 0.94 & 40.9 & 0.768 \\
+Circuit contrast $\lambda_{\mathrm{C}}$=0.2$^\star$ & 0.0167 & 39.1 & 0.0186 & 0.97 & 41.3 & 0.821 \\
+\bottomrule
+\end{tabular}

@@ -1,0 +1,17 @@
+\begin{tabular}{l ccc cc ccc cc}
+\toprule
+ & \multicolumn{5}{c}{Width 64} & \multicolumn{5}{c}{Width 256} \\
+\cmidrule(lr){2-6}\cmidrule(lr){7-11}
+ & \multicolumn{3}{c}{Top-1 (\%)} & \multicolumn{2}{c}{$\rho$ Syn.} & \multicolumn{3}{c}{Top-1 (\%)} & \multicolumn{2}{c}{$\rho$ Syn.} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-6}\cmidrule(lr){7-9}\cmidrule(lr){10-11}
+Regime & $V{=}1$ & 2 & 4 & 1 & 4 & 1 & 2 & 4 & 1 & 4 \\
+\midrule
+Baseline & 41.1 & -- & -- & 0.86 & -- & 39.7 & -- & -- & 0.95 & -- \\
+Augmentation & 43.9 & 44.1 & 44.9 & 0.87 & 0.88 & 44.9 & 45.0 & 45.6 & 0.82 & 0.81 \\
+TT-sim & 40.7 & 40.8 & 41.8 & 0.89 & 0.88 & 43.0 & 42.5 & 42.9 & 0.85 & 0.85 \\
+Circuit contrast & 40.2 & 41.4 & 42.6 & 0.91 & 0.90 & 42.6 & 42.5 & 43.5 & 0.87 & 0.83 \\
+$L_1$ alignment & 46.6 & 47.0 & 47.7 & 0.86 & 0.84 & 47.1 & 45.9 & 47.4 & 0.81 & 0.81 \\
+$L_1$ alignment + TT-sim & 45.6 & 46.2 & 46.3 & 0.87 & 0.83 & 46.5 & 46.1 & 47.5 & 0.84 & 0.88 \\
+ \hl \ours & \hl \textbf{62.8} & \hl \textbf{62.9} & \hl \textbf{62.9} & \hl \textbf{0.84} & \hl \textbf{0.82} & \hl \textbf{63.7} & \hl \textbf{65.3} & \hl \textbf{64.7} & \hl \textbf{0.76} & \hl \textbf{0.75} \\
+\bottomrule
+\end{tabular}

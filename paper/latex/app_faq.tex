@@ -1,0 +1,84 @@
+\begin{description}
+\item[Q1. Why not simply use simulation to find equivalent gates?] For finding candidates, simulation is the right
+tool and remains far better than any embedding (\cref{sec:matching}). Retrieval is a \emph{probe}: if a representation
+claims to encode function, equivalent gates should be close in it. The probe also matters downstream, because
+embeddings reused for synthesis, verification or design-space exploration inherit this property.
+
+\item[Q2. Is identity injection realistic?] Not as a flow, and we do not use it as one. It is a stress test that
+controls the amount of redundancy; all claims about realistic rewrites rest on the synthesis and held-out families,
+which are reported separately everywhere.
+
+\item[Q3. The audited model is small. Do the findings transfer to DeepGate?] The bidirectional encoder adds
+DeepGate's attention and reverse pass and shows the same pattern (\cref{sec:generality}), and \cref{tab:general}
+applies the unchanged harness to the released DeepGate2 and DeepGate3 checkpoints, which show it too. We make no
+claim about published models beyond the quantities that table reports.
+
+\item[Q4. Does $\rho$ exaggerate the problem?] $\rho$ is reported together with the absolute inconsistency, the
+noise floor and $\Delta$MAE. Under synthesis, the absolute inconsistency is \IncSynOverNoiseBase\ times the noise floor,
+which does not involve the model's error.
+
+\item[Q5. Are the improvements of \ours\ significant?] At design level, \ours\ improves retrieval on 7 of 7 test
+designs against every other regime, with bootstrap intervals that exclude zero (\cref{tab:app_stats}). Its accuracy
+cost is not significant at design level.
+
+\item[Q6. Was the test set used for development?] An exploratory version of the study was evaluated on the same
+test designs; we disclose this in the main paper. The final protocol, the selection rule and all reported models
+were fixed and retrained afterwards, and the ISCAS suite was never used before the final evaluation.
+
+\item[Q7. Why does H2 break every model?] H2 replaces each affected AND by XORs whose inputs reconverge. A likely reason is that signal
+probabilities of reconvergent logic depend on correlations between fanins, which a message-passing encoder trained on
+AND-dominated cones never had to represent. Consistent with this, the failure appears for every regime, including those
+trained on certified variants, on both suites and with every encoder.
+
+\item[Q8. Why are complemented pairs excluded from \ours\ and from retrieval?] They are \ComplPct\% of pairs. A single
+embedding cannot be close both to $f$ and to $\neg f$ without a polarity-aware geometry; we leave such a geometry
+to future work and keep retrieval and training on the same pair set.
+
+\item[Q9. Are labels correct?] Signal probabilities are estimated from 4{,}096 uniform patterns at the circuit inputs
+(standard error at most 0.008). Equivalences are proven by SAT, not estimated.
+
+\item[Q10. Does the accuracy cost of \ours\ make it impractical?] With $\lambda=0.05$ it keeps baseline-level
+accuracy at almost the same retrieval (\cref{tab:ablation}); the selected $\lambda$ follows a rule fixed in advance.
+The trade-off can be set by the user.
+
+\item[Q11. Why is SAT sweeping slower with embeddings?] On designs of at most 1{,}020 gates, refuted calls take
+microseconds and the embedding forward pass dominates. The probe shows that the ordering signal exists; turning it
+into a speed-up requires larger designs, hard refutations and amortized or incremental inference.
+
+\item[Q12. Could the structural-hash definition of ``restructured'' miss changes?] Two cones with equal hashes are
+isomorphic up to AND commutativity, so a fanin-only encoder gives them identical states. The definition is therefore
+exact for such encoders; for others the all-pairs metrics apply.
+
+\item[Q13. DeepGate2 filters its training pairs. Does TT-sim fail only because ours are sampled at random?] No. We
+retrained the objective with DeepGate2's own filters, namely equal signal probability within $0.05$, level difference
+at most $5$, and truth-table distance either below $0.2$ or above $0.8$, each pair drawn inside a single cone so the
+inputs agree by construction; distances are zero-normalized as in DeepGate2. Over \TTFNSeeds\ seeds the filtered variant
+retrieves less than the random-pair version (\TTFTopRS\% against \TTTopRS\%), is no more accurate (MAE \TTFMAE\ against
+\TTMAE) and leaves synthesis unchanged ($\rho$ \TTFRhoSyn\ against \TTRhoSyn); it lowers the inconsistency under
+injection slightly ($\rho$ \TTFRhoInj\ against \TTRhoInj, redundancy gap \TTFDInj\ against \TTDInj), far from \ours\
+($\rho$ \OursRhoInj, redundancy gap \OursDInj, retrieval \OursTopRS\%). Filtering makes
+the pairs cleaner, but it leaves the objective pairwise and functional-similarity-based, which is exactly the property
+the audit finds insufficient.
+
+\item[Q14. If simulation-matched pairs train \ours\ as well as proven pairs, why prove anything?] Training and
+measurement need different things. Training tolerates a small fraction of wrong pairs: with pairs matched on
+4{,}096-bit or 64-bit signatures, \ours\ reaches \SigFourKTop\% and \SigSixtyFourTop\% retrieval against
+\OursTopRS\% with proven pairs. Measurement does not: \SigFalsePct\% of the gates with a signature match have no
+true equivalent, and such a gate would be scored as a miss of a pair that does not exist. Proofs make every pair in
+the audit a true positive.
+
+\item[Q15. Is \ours\ just a contrastive head on top of an unchanged encoder?] No. Training only the projection head
+with the same loss and pairs on a frozen encoder gives \ProbeBaseTop\% (baseline encoder) and \ProbeAugTop\%
+(augmented encoder), against \OursTopRS\% for \ours; \EncShare\% of the gain over the baseline requires training the
+encoder.
+
+\item[Q16. Was the confirmatory design chosen after seeing results?] hyp was not used at any stage of development.
+We built its circuits and evaluated the 15 final models only after every other result was fixed, with the same
+code and no retraining; its main findings replicate there, and two secondary ones do not (\cref{sec:generality}).
+
+\item[Q17. MixGate aligns SAT-proven pairs with an $L_1$ loss. Why InfoNCE?] Because recognizing an equivalent among
+many gates needs negatives. On our proven pairs, with the weight chosen by the same rule, $L_1$ alignment reaches
+\LoneTop\% retrieval ($L_1$ alignment + TT-sim: \LonettTop\%), close to augmentation, while its inconsistency matches
+augmentation's; at larger weights all embeddings collapse to one point. A positives-only loss steadies the
+predictions but does not make the representation discriminative.
+\end{description}

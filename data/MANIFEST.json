@@ -1,0 +1,62 @@
+[
+ {
+  "file": "data.pkl",
+  "bytes": 35259212,
+  "md5": "16f6bb74f78b098aeb492ef6bea00f31"
+ },
+ {
+  "file": "heldout.pkl",
+  "bytes": 4656596,
+  "md5": "03d0f8d8b8887d339977fa0b744281c1"
+ },
+ {
+  "file": "adv.pkl",
+  "bytes": 26386000,
+  "md5": "d24bf1c5cb2ddceae10da1930f5ae71c"
+ },
+ {
+  "file": "iscas.pkl",
+  "bytes": 34077014,
+  "md5": "8049a078473521ae6652a7756ec6c2b6"
+ },
+ {
+  "file": "abc.pkl",
+  "bytes": 13886205,
+  "md5": "121da2dd3681367c160dffd89607e88c"
+ },
+ {
+  "file": "abc.stats.json",
+  "bytes": 1194,
+  "md5": "edebf98f4a0a63d6ee56c4265b89a07f"
+ },
+ {
+  "file": "data_hyp.pkl",
+  "bytes": 2270290,
+  "md5": "7993f4f4c67a688dd9d3c007165353a1"
+ },
+ {
+  "file": "heldout_hyp.pkl",
+  "bytes": 774171,
+  "md5": "c0b8fe7680f83cccb4307475e902f585"
+ },
+ {
+  "file": "full_variants.pkl",
+  "bytes": 656763,
+  "md5": "647fcb7d09af6443035669089bd7d77f"
+ },
+ {
+  "file": "pairs_sig64.pkl",
+  "bytes": 5123801,
+  "md5": "0b72c55862e9d6361d495ce0cf6209af"
+ },
+ {
+  "file": "pairs_sig4096.pkl",
+  "bytes": 4951364,
+  "md5": "8ede4276263219bf7883585f6786ea1c"
+ },
+ {
+  "file": "examples.pkl",
+  "bytes": 2822,
+  "md5": "7b910612dd4cfc929f30a1465d0ac67a"
+ }
+]

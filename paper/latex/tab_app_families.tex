@@ -1,0 +1,20 @@
+\begin{table}[h]
+\centering
+\caption{Rewrite families. Pass names refer to mockturtle via aigverse; parameters not listed are library defaults.}
+\label{tab:app_families}
+\small
+\begin{tabular}{p{2.3cm}p{10.4cm}p{3.6cm}}
+\toprule
+Family & Definition & Used for \\
+\midrule
+S1 & cut rewriting; resubstitution; balancing (SOP); SOP refactoring & train, test \\
+S2 & balancing; cut rewriting (zg); SOP refactoring (zg); resubstitution (10 leaves, 3 inserts) & train, test \\
+S3 & SOP refactoring; cut rewriting; cut rewriting (zg) & train, test \\
+S4 & resubstitution (10 leaves, 3 inserts); balancing; cut rewriting; resubstitution & train, test \\
+I.$r$ & each gate rebuilt with probability $r$ by one of three identities ($(x\wedge y)\wedge(x\vee y)$, Shannon expansion on a random earlier signal, $(x\wedge y)\wedge\neg((x\wedge y)\wedge\neg x)$), chosen uniformly & train ($r=0.15,0.3$), test ($r=0.1,0.3,0.5$) \\
+H1 & resubstitution with don't cares (window 12, 10 leaves); balancing (ESOP); cut rewriting with don't cares (zg); SOP refactoring with don't cares and reconvergence-driven cuts & test only \\
+H2 & each gate rebuilt with probability 0.3 as $(x\oplus y)\oplus(x\vee y)$, XOR built from three ANDs & test only \\
+Adversarial & with prob.\ 0.5: 1 to 4 random passes from S-type passes, then with prob.\ 0.5 injection $r\sim U(0.02,0.15)$; otherwise injection $r\sim U(0.02,0.2)$ with 1 to 3 identity types; rejected if gate count grows by $>30\%$; 16 per circuit & test only \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,24 @@
+\begin{table}[h]
+\centering
+\caption{Pipeline stages and wall time on a 2-core CPU (training times measured with other jobs running concurrently).}
+\label{tab:app_pipeline}
+\small
+\begin{tabular}{lll}
+\toprule
+Stage & Script & Time \\
+\midrule
+Cone extraction (EPFL) & \texttt{data.py} & 11\,s \\
+Fixed variants and certification (EPFL) & \texttt{data.py} & 7\,min \\
+Adversarial variants, 16 per circuit & \texttt{evaluate.py} & 29\,min \\
+SAT-proven matching of all EPFL pairs & \texttt{rematch.py} & 43\,s ($\approx10^6$ SAT calls) \\
+Held-out variants H1, H2 (EPFL) & \texttt{heldout\_run.py} & 9\,min \\
+ISCAS circuits, variants and matching & \texttt{iscas\_run.py} & see log \\
+Training: Baseline (12 epochs) & \texttt{train.py} & 4\,min \\
+Training: Augmentation (12 epochs) & \texttt{train.py} & 7\,min \\
+Training: \ours (12 epochs) & \texttt{train.py} & 7\,min \\
+Training: TT-sim (12 epochs) & \texttt{train.py} & 9\,min \\
+Training: Circuit contrast (12 epochs) & \texttt{train.py} & 9\,min \\
+Training: Bidirectional baseline (12 epochs) & \texttt{train.py} & 13\,min \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,18 @@
+\begin{tabular}{ll cccccc c}
+\toprule
+Model & PI vectors & MAE & $\rho$ syn. & $\rho$ inj. & $\rho$ h.-o. & Top-1 seen & Top-1 h.-o. & self Top-1 \\
+\midrule
+DeepGate2 & random (released) & 0.0290 & 0.66 & 1.06 & 2.54 & 32.8 & 20.0 & 49.0 \\
+ & shared (paper) & 0.0287 & 0.63 & 1.01 & 2.54 & 37.4 & 22.6 & 98.3 \\
+\addlinespace
+DeepGate3 tok. & random (released) & 0.0215 & 0.85 & 1.34 & 3.82 & 42.9 & 27.9 & 71.6 \\
+ & shared (paper) & 0.0214 & 0.85 & 1.34 & 3.82 & 42.9 & 28.5 & 100.0 \\
+\addlinespace
+DG2 + ft. & random (released) & 0.0280 & 0.64 & 0.82 & 2.72 & 36.2 & 21.5 & -- \\
+ & shared (paper) & 0.0274 & 0.62 & 0.80 & 2.77 & 41.0 & 23.6 & -- \\
+\addlinespace
+DG2 + \ours & random (released) & 0.0353 & 0.55 & 0.61 & 2.04 & 62.7 & 36.3 & -- \\
+ & shared (paper) & 0.0350 & 0.54 & 0.59 & 2.05 & 67.4 & 39.2 & -- \\
+\addlinespace
+\bottomrule
+\end{tabular}

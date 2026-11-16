@@ -1,0 +1,17 @@
+\begin{table}[h]
+\centering
+\caption{Hyperparameters (identical for all regimes unless stated).}
+\label{tab:app_hparams}
+\footnotesize
+\begin{tabular}{ll|ll}
+\toprule
+State size & 64 & Optimizer & Adam, one-cycle cosine, peak $2\times10^{\ensuremath{-}3}$, 10\% warm-up \\
+Rounds & 2 & Gradient clipping & global norm 1.0 \\
+$\phi,\psi$, projection head $q$ & 2-layer MLP, ReLU & Batch & 16 circuits (32 with variants) \\
+Probability head & 2-layer MLP, sigmoid & Epochs & 12 \\
+Probability loss & $L_1$ on all AND gates & Seeds & 0 to 4 (CPU run: 0 to 2) \\
+\ours\ & InfoNCE, $\tau=0.1$, $\le 512$ pairs/batch & TT-sim & 64 random pairs/circuit, 1{,}024 patterns \\
+Circuit contrast & mean-pooled $\mathbf z$, InfoNCE, $\tau=0.1$ & Loss weights & selected on validation (\cref{app:selection}) \\
+\bottomrule
+\end{tabular}
+\end{table}
